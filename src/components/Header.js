@@ -1,10 +1,11 @@
 import Image from 'next/image'
 import React from 'react'
-import { MagnifyingGlassIcon } from '@heroicons/react/24/outline'
+import { MagnifyingGlassIcon, PlusCircleIcon } from '@heroicons/react/24/outline'
+import { HomeIcon } from '@heroicons/react/24/solid'
 
 export default function Header() {
   return (  
-    <div className="flex items-center justify-between max-w-6xl">
+    <div className="flex items-center justify-between max-w-6xl mx-4 xl:mx-auto">
       {/* Logo */}
       <div className=" cursor-pointer h-24 w-24 relative hidden lg:inline-grid">
         <Image
@@ -30,7 +31,11 @@ export default function Header() {
         <input type="text" className=" pl-10 border-gray-500 bg-gray-50 text-sm focus:ring-black focus:border-black rounded-md" placeholder='Search'/>
       </div>
       {/* Menu */}
-      <div className="">Right</div>
+      <div className="flex space-x-4 items-center">
+        <HomeIcon className="hidden md:inline-flex h-6 cursor-pointer hover:scale-105 transition-transform duration-200 ease-out"/>
+        <PlusCircleIcon className="h-6 cursor-pointer hover:scale-105 transition-transform duration-200 ease-out"/>
+        <img src="https://tractive.com/blog/wp-content/uploads/2016/04/puppy-care-guide-for-new-parents.jpg" alt="user-logo" class="h-10 w-10 rounded-full object-cover cursor-pointer"/>
+      </div>
     </div>
       
   )
