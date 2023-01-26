@@ -1,5 +1,6 @@
 import React from 'react'
 import { EllipsisHorizontalIcon } from '@heroicons/react/24/solid'
+import { HeartIcon, ChatBubbleOvalLeftEllipsisIcon, BookmarkIcon } from '@heroicons/react/24/outline'
 
 export default function Post({id, username, userImage, images, caption}) {
   return (
@@ -13,6 +14,15 @@ export default function Post({id, username, userImage, images, caption}) {
 
       {/* Post Image */}
       <img src={images[0]} alt={caption} className="w-full object-cover"/>
+
+      {/* Post Buttons */}
+      <div className="flex justify-between px-4 pt-4">
+        <div className="flex space-x-4">
+          <HeartIcon class="btn"/>
+          <ChatBubbleOvalLeftEllipsisIcon class="btn"/>
+        </div>
+        <BookmarkIcon class="btn"/>
+      </div>
     </div>
   )
 }
