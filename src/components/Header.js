@@ -1,9 +1,14 @@
 import Image from 'next/image'
 import React from 'react'
+import { useRouter } from 'next/router'
 import { MagnifyingGlassIcon, PlusCircleIcon } from '@heroicons/react/24/outline'
 import { HomeIcon } from '@heroicons/react/24/solid'
+import { useSession, signIn, signOut } from 'next-auth/react'
 
 export default function Header() {
+  const router = useRouter()
+  const { data: session, status } = useSession()
+  const isSignInPage = router.pathname === '/auth/signin'
   return ( 
     <div className="shadow-sm border-b sticky top-0 bg-white z-30">
       <div className="flex items-center justify-between max-w-6xl mx-4 xl:mx-auto">
@@ -34,8 +39,17 @@ export default function Header() {
         {/* Menu */}
         <div className="flex space-x-4 items-center">
           <HomeIcon className="hidden md:inline-flex h-6 cursor-pointer hover:scale-105 transition-transform duration-200 ease-out"/>
-          <PlusCircleIcon className="h-6 cursor-pointer hover:scale-105 transition-transform duration-200 ease-out"/>
-          <img src="https://tractive.com/blog/wp-content/uploads/2016/04/puppy-care-guide-for-new-parents.jpg" alt="user-logo" class="h-10 w-10 rounded-full object-cover cursor-pointer"/>
+          {
+            session && session.user ? (
+              <>
+                <PlusCircleIcon className="h-6 cursor-pointer hover:scale-105 transition-transform duration-200 ease-out"/>
+                <img onClick={signOut} src={session.user.image} alt="user-logo" class="h-10 w-10 rounded-full object-cover cursor-pointer"/>
+              </>
+            ) : (
+              isSignInPage ? null :
+              <button onClick={signIn}>Sign in</button>
+            )
+          }
         </div>
       </div>
     </div>
