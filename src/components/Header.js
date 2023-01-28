@@ -8,6 +8,7 @@ import { useSession, signIn, signOut } from 'next-auth/react'
 export default function Header() {
   const router = useRouter()
   const { data: session, status } = useSession()
+  console.log(session)
   const isSignInPage = router.pathname === '/auth/signin'
   return ( 
     <div className="shadow-sm border-b sticky top-0 bg-white z-30">
@@ -43,7 +44,7 @@ export default function Header() {
             session && session.user ? (
               <>
                 <PlusCircleIcon className="h-6 cursor-pointer hover:scale-105 transition-transform duration-200 ease-out"/>
-                <img onClick={signOut} src={session.user.image} alt="user-logo" class="h-10 w-10 rounded-full object-cover cursor-pointer"/>
+                <Image width={100} height={100} onClick={signOut} src={session.user.image} alt="user-logo" class="h-10 w-10 rounded-full object-cover cursor-pointer"/>
               </>
             ) : (
               isSignInPage ? null :

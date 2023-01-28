@@ -12,6 +12,13 @@ export const authOptions = {
   secret: process.env.SECRET,
   pages: {
     signIn: "/auth/signin",
+  },
+  callbacks: {
+    async session ({ session, token, user }) {
+      session.user.username = session.user.email.split('@')[0]
+      session.user.uid = token.sub
+      return session
+    }
   }
 }
 export default NextAuth(authOptions)
