@@ -4,9 +4,12 @@ import { useRouter } from 'next/router'
 import { MagnifyingGlassIcon, PlusCircleIcon } from '@heroicons/react/24/outline'
 import { HomeIcon } from '@heroicons/react/24/solid'
 import { useSession, signIn, signOut } from 'next-auth/react'
+import { useRecoilState } from 'recoil'
+import { modalState } from 'atom/modalAtom'
 
 export default function Header() {
   const router = useRouter()
+  const [open, setOpen] = useRecoilState(modalState)
   const { data: session, status } = useSession()
   console.log(session)
   const isSignInPage = router.pathname === '/auth/signin'
@@ -43,8 +46,8 @@ export default function Header() {
           {
             session && session.user ? (
               <>
-                <PlusCircleIcon className="h-6 cursor-pointer hover:scale-105 transition-transform duration-200 ease-out"/>
-                <Image width={100} height={100} onClick={signOut} src={session.user.image} alt="user-logo" class="h-10 w-10 rounded-full object-cover cursor-pointer"/>
+                <PlusCircleIcon onClick={() => setOpen(true)} className="h-6 cursor-pointer hover:scale-105 transition-transform duration-200 ease-out"/>
+                <Image width={100} height={100} onClick={signOut} src={session.user.image} alt="user-logo" className="h-10 w-10 rounded-full object-cover cursor-pointer"/>
               </>
             ) : (
               isSignInPage ? null :

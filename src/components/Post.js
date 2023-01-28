@@ -18,10 +18,10 @@ export default function Post({id, username, userImage, images, caption}) {
       {/* Post Buttons */}
       <div className="flex justify-between px-4 pt-4">
         <div className="flex space-x-4">
-          <HeartIcon class="btn"/>
-          <ChatBubbleOvalLeftEllipsisIcon class="btn"/>
+          <HeartIcon className="btn"/>
+          <ChatBubbleOvalLeftEllipsisIcon className="btn"/>
         </div>
-        <BookmarkIcon class="btn"/>
+        <BookmarkIcon className="btn"/>
       </div>
 
       {/* Post Caption */}
