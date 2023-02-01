@@ -2,7 +2,14 @@ import React from 'react'
 import { EllipsisHorizontalIcon } from '@heroicons/react/24/solid'
 import { HeartIcon, ChatBubbleOvalLeftEllipsisIcon, BookmarkIcon, FaceSmileIcon } from '@heroicons/react/24/outline'
 
+import ImageSlider from './ImageSlider';
+
 export default function Post({id, username, userImage, images, caption}) {
+  const items = images.map((image, index) => ({
+    src: image,
+    caption: caption,
+    alt: `${caption} ${index + 1}`
+  }))
   return (
     <div className="bg-white my-7 border rounded-md">
       {/* Post Header */}
@@ -13,7 +20,8 @@ export default function Post({id, username, userImage, images, caption}) {
       </div>
 
       {/* Post Image */}
-      <img src={images[0]} alt={caption} className="w-full object-cover"/>
+      <ImageSlider items={items} imageClassName="w-full h-[400px] object-contain"/>
+      {/* <img src={images[0]} alt={caption} className="w-full h-[400px] object-contain"/> */}
 
       {/* Post Buttons */}
       <div className="flex justify-between px-4 pt-4">
