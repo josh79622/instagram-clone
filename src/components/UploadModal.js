@@ -45,18 +45,23 @@ export default function UploadModal() {
       timestamp: serverTimestamp(),
     });
 
-    const imageRef = ref(storage, `posts/${docRef.id}/image`)
-    for (let selectedFile of selectedFiles) {
+    
+    const images = []
+    for (let index in selectedFiles) {
+      const selectedFile = selectedFiles[index]
+      const imageRef = ref(storage, `posts/${docRef.id}/image/${index}`)
       await uploadString(imageRef, selectedFile, 'data_url').then(async (snapshot) => {
         const downloadURL = await getDownloadURL(imageRef)
-        await updateDoc(doc(db, "posts", docRef.id), {
-          image: downloadURL,
-        })
+        images.push(downloadURL)
       })
     }
+    await updateDoc(doc(db, "posts", docRef.id), {
+      images,
+    })
     
     setOpen(false)
     setLoading(false)
+    setSelectedFiles([])
   }
   function deleteOneImage(index) {
     setSelectedFiles(selectedFiles => [...selectedFiles.slice(0, index),...selectedFiles.slice(index + 1)])
