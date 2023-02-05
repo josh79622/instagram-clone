@@ -1,5 +1,5 @@
 import { useMemo, useRef, useState } from "react"
-import { modalState } from "atom/modalAtom"
+import { modalState, isLoading } from "atom/modalAtom"
 import { useRecoilState } from "recoil"
 import Modal from 'react-modal'
 import { CameraIcon } from "@heroicons/react/24/outline"
@@ -12,6 +12,7 @@ import ImageSlider from './ImageSlider';
 export default function UploadModal() {
   const { data: session } = useSession()
   const [open, setOpen] = useRecoilState(modalState)
+  const [_isLoading, setIsLoading] = useRecoilState(isLoading)
   const [selectedFiles, setSelectedFiles] = useState([])
   const [loading, setLoading] = useState(false)
   const filePickerRef = useRef(null)
@@ -36,6 +37,7 @@ export default function UploadModal() {
     
   }
   async function uploadPost (event) {
+    setIsLoading(true)
     if (loading) return;
     setLoading(true)
     const docRef = await addDoc(collection(db, "posts"), {
@@ -62,6 +64,7 @@ export default function UploadModal() {
     setOpen(false)
     setLoading(false)
     setSelectedFiles([])
+    setIsLoading(false)
   }
   function deleteOneImage(index) {
     setSelectedFiles(selectedFiles => [...selectedFiles.slice(0, index),...selectedFiles.slice(index + 1)])

@@ -2,8 +2,12 @@ import Feed from '@/components/Feed'
 import Header from '@/components/Header'
 import UploadModal from '@/components/UploadModal'
 import Head from 'next/head'
+import LoadingOverlay from '@murasoftware/react-loading-overlay'
+import { isLoading } from "atom/modalAtom"
+import { useRecoilState } from "recoil"
 
 export default function Home() {
+  const [_isLoading, setIsLoading] = useRecoilState(isLoading)
   return (
     <div className=" bg-gray-50 min-h-screen">
       <Head>
@@ -12,15 +16,25 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
+
+      {/* Loading Overlay */}
+      <LoadingOverlay
+        className={_isLoading ? `overflow-hidden ` : ''}
+        classNamePrefix="z-[9999]"
+        active={_isLoading}
+      >
+        {/* Header */}
+        <Header/>
+
+        {/* Feed */}
+        <Feed/>
+
+        {/* Modal */}
+        <UploadModal/>
+      </LoadingOverlay>
       
-      {/* Header */}
-      <Header/>
 
-      {/* Feed */}
-      <Feed/>
-
-      {/* Modal */}
-      <UploadModal/>
+      
     </div>
   )
 }

@@ -23,6 +23,7 @@ export default function Header() {
             layout='fill'
             className="object-contain"
             alt="LOGO"
+            onClick={() => router.push('/')} 
           />
         </div>
         <div className=" cursor-pointer h-24 w-10 relative lg:hidden">
@@ -31,6 +32,7 @@ export default function Header() {
             layout='fill'
             className="object-contain"
             alt="LOGO"
+            onClick={() => router.push('/')} 
           />
         </div>
         {/* Search */}
@@ -42,7 +44,7 @@ export default function Header() {
         </div>
         {/* Menu */}
         <div className="flex space-x-4 items-center">
-          <HomeIcon className="hidden md:inline-flex h-6 cursor-pointer hover:scale-105 transition-transform duration-200 ease-out"/>
+          <HomeIcon onClick={() => router.push('/')} className="hidden md:inline-flex h-6 cursor-pointer hover:scale-105 transition-transform duration-200 ease-out"/>
           {
             session && session.user ? (
               <>

@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@heroicons/react": "^2.0.13",
+    "@murasoftware/react-loading-overlay": "^1.0.3",
     "@next/font": "13.1.5",
     "bootstrap": "^5.2.3",
     "classnames": "^2.3.2",
