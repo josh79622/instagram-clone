@@ -1,21 +1,35 @@
-import React, { useState  } from 'react'
+import React, { useEffect, useState  } from 'react'
 import { EllipsisHorizontalIcon } from '@heroicons/react/24/solid'
 import { HeartIcon, ChatBubbleOvalLeftEllipsisIcon, BookmarkIcon, FaceSmileIcon } from '@heroicons/react/24/outline'
 import { useSession } from 'next-auth/react';
+import Moment from 'react-moment';
 
 import ImageSlider from './ImageSlider';
 import Image from 'next/image';
-import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
+import { addDoc, collection, onSnapshot, orderBy, query, serverTimestamp } from 'firebase/firestore';
 import { db } from '../../firebase';
 
 export default function Post({id, username, userImage, images, caption}) {
   const { data: session } = useSession();
   const [comment, setComment] = useState('');
+  const [comments, setComments] = useState([]);
+
+  useEffect(() => {
+    const unsubscribe = onSnapshot(
+      query(collection(db, 'posts', id, 'comments'), orderBy('timestamp', 'desc')), (snapshot) => {
+        setComments(snapshot.docs.map((doc) => ({...doc.data(), id: doc.id})))
+      }
+    )
+    return unsubscribe
+  }, [id])
+  console.log('comments', comments)
+
   const items = images ? images.map((image, index) => ({
     src: image,
     caption: caption,
     alt: `${caption} ${index + 1}`
   })) : []
+  
 
   async function sendComment(event) {
     event.preventDefault();
@@ -59,6 +73,21 @@ export default function Post({id, username, userImage, images, caption}) {
         {caption}
       </p>
       {/* Post Comments */}
+      {
+        comments && comments.length > 0 && (
+          <div className="mx-10 max-h-24 overflow-y-scroll scrollbar-none">
+            {
+              comments.map((comment, index) => (
+                <div key={comment.id} className="flex items-center space-x-2 mb-2">
+                  <Image width={100} height={100} src={comment.userImage} className='h-7 w-7 rounded-full object-cover' alt={comment.userImage}/>
+                  <p className="font-semibold">{comment.username}</p>
+                  <p className="flex-1 truncate">{comment.comment}</p>
+                  <Moment fromNow>{comment.timestamp?.toDate()}</Moment>
+                </div>
+              ))
+            }
+          </div>)
+      }
 
       {/* Post Input Box */}
       {
