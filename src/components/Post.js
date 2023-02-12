@@ -1,18 +1,23 @@
 import React, { useEffect, useState  } from 'react'
 import { EllipsisHorizontalIcon } from '@heroicons/react/24/solid'
 import { HeartIcon, ChatBubbleOvalLeftEllipsisIcon, BookmarkIcon, FaceSmileIcon } from '@heroicons/react/24/outline'
+import { HeartIcon as HeartIconFilled } from '@heroicons/react/24/solid'
 import { useSession } from 'next-auth/react';
 import Moment from 'react-moment';
 
 import ImageSlider from './ImageSlider';
 import Image from 'next/image';
-import { addDoc, collection, onSnapshot, orderBy, query, serverTimestamp } from 'firebase/firestore';
+import { addDoc, collection, deleteDoc, doc, onSnapshot, orderBy, query, serverTimestamp, setDoc, updateDoc } from 'firebase/firestore';
 import { db } from '../../firebase';
+import Heart from './Heart';
+import Comment from './Comment';
 
 export default function Post({id, username, userImage, images, caption}) {
   const { data: session } = useSession();
   const [comment, setComment] = useState('');
   const [comments, setComments] = useState([]);
+  const [likes, setLikes] = useState([]);
+  const [hasLike, setHasLike] = useState(false);
 
   useEffect(() => {
     const unsubscribe = onSnapshot(
@@ -22,7 +27,20 @@ export default function Post({id, username, userImage, images, caption}) {
     )
     return unsubscribe
   }, [id])
+  useEffect(() => {
+    const unsubscribe = onSnapshot(
+      collection(db, 'posts', id, 'likes'), (snapshot) => {
+        console.log('LIKE!!!!!!!!!')
+        setLikes(snapshot.docs.map((doc) => ({...doc.data(), id: doc.id})))
+      }
+    )
+    return unsubscribe
+  }, [id])
+  useEffect(() => {
+    setHasLike(!!likes.find((like) => like.id === session?.user.uid))
+  }, [likes, session])
   console.log('comments', comments)
+  console.log('likes', likes)
 
   const items = images ? images.map((image, index) => ({
     src: image,
@@ -37,10 +55,24 @@ export default function Post({id, username, userImage, images, caption}) {
     setComment('');
     await addDoc(collection(db, 'posts', id, 'comments'), {
       comment: commentToSend,
-      username: session.user.username,
-      userImage: session.user.image,
+      username: session?.user.username,
+      userImage: session?.user.image,
       timestamp: serverTimestamp(),
     })
+  }
+
+  async function likePost(event) {
+    if (hasLike) {
+      await deleteDoc(doc(db, 'posts', id, 'likes', session?.user.uid))
+    } else {
+      await setDoc(doc(db, 'posts', id, 'likes', session?.user.uid), {
+        username: session?.user.username,
+      })
+    }
+  }
+
+  async function likeComment(commentId, commentLikes) {
+    
   }
   return (
     <div className="bg-white my-7 border rounded-md">
@@ -60,7 +92,9 @@ export default function Post({id, username, userImage, images, caption}) {
         session &&
         <div className="flex justify-between px-4 pt-4">
           <div className="flex space-x-4">
-            <HeartIcon className="btn"/>
+            {/* <HeartIconFilled className="btn text-red-400"/>
+            <HeartIcon className="btn"/> */}
+            <Heart onClick={likePost} isFilled={hasLike}/>
             <ChatBubbleOvalLeftEllipsisIcon className="btn"/>
           </div>
           <BookmarkIcon className="btn"/>
@@ -78,12 +112,7 @@ export default function Post({id, username, userImage, images, caption}) {
           <div className="mx-10 max-h-24 overflow-y-scroll scrollbar-none">
             {
               comments.map((comment, index) => (
-                <div key={comment.id} className="flex items-center space-x-2 mb-2">
-                  <Image width={100} height={100} src={comment.userImage} className='h-7 w-7 rounded-full object-cover' alt={comment.userImage}/>
-                  <p className="font-semibold">{comment.username}</p>
-                  <p className="flex-1 truncate">{comment.comment}</p>
-                  <Moment fromNow>{comment.timestamp?.toDate()}</Moment>
-                </div>
+                <Comment comment={comment} key={comment.id} postId={id}/>
               ))
             }
           </div>)
