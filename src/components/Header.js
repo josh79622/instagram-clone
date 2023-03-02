@@ -40,7 +40,7 @@ export default function Header() {
           <div className="absolute top-2 left-2">
             <MagnifyingGlassIcon className='w-5 text-gray-500'/>
           </div>
-          <input type="text" className=" pl-10 border-gray-500 bg-gray-50 text-sm focus:ring-black focus:border-black rounded-md" placeholder='Search'/>
+          <input type="text" className=" max-w-[40vw] pl-10 border-gray-500 bg-gray-50 text-sm focus:ring-black focus:border-black rounded-md" placeholder='Search'/>
         </div>
         {/* Menu */}
         <div className="flex space-x-1 sm:space-x-2 md:space-x-3 lg:space-x-4 items-center">
