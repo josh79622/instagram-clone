@@ -14,6 +14,7 @@ import Comment from './Comment';
 
 export default function Post({id, username, userImage, images, caption}) {
   const { data: session } = useSession();
+  console.log('[[[[session]]]]', session);
   const [comment, setComment] = useState('');
   const [comments, setComments] = useState([]);
   const [likes, setLikes] = useState([]);
@@ -103,6 +104,7 @@ export default function Post({id, username, userImage, images, caption}) {
 
       {/* Post Caption */}
       <p className="p-5 truncate">
+        {likes.length > 0 &&  (<span className=' font-bold mb-1'>{likes.length} likes <br/></span>)}
         <span className="font-bold mr-2">{username}</span>
         {caption}
       </p>

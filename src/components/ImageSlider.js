@@ -1,4 +1,5 @@
 import { TrashIcon } from '@heroicons/react/24/outline';
+import Image from 'next/image';
 import React, { useRef } from 'react';
 import { Slide } from 'react-slideshow-image';
 import 'react-slideshow-image/dist/styles.css';
@@ -36,7 +37,7 @@ const Example = ({ items, imageClassName, onDelete }) => {
                         />
                       )
                     }
-                    <img src={item.src} alt={item.alt} className={imageClassName}/>
+                    <Image width={100} height={100} src={item.src} alt={item.alt} className={imageClassName}/>
                   </div>
                 ))
               }

@@ -10,11 +10,13 @@ export default function Signin({providers}) {
       <div className="flex justify-center space-x-7 mt-20">
         <img className="hidden object-cover md:inline-flex md:w-48 rotate-6" src="https://like4like.com/img/hero-x750.png" alt="instagram-likes" />
         <div className="">
+        <div className="flex flex-col items-center">
+          <Image width={128} height={128} className="w-32 object-cover " src="https://www.elcedrobarcelona.com/wp-content/uploads/instagram-logo-2.png" alt="instagram and logo" />
+          <p className="text-sm italic my-10 text-center">This app is created for learning purposes.</p>
+        </div>
           {
             Object.values(providers).map((provider, index) => (
-              <div key={provider.name} className="flex flex-col items-center">
-                <Image width={128} height={128} className="w-32 object-cover" src="https://www.elcedrobarcelona.com/wp-content/uploads/instagram-logo-2.png" alt="instagram and logo" />
-                <p className="text-sm italic my-10 text-center">This app is created for learning purposes.</p>
+              <div key={provider.name} className="flex flex-col items-center mb-2">
                 <button onClick={() => { signIn(provider.id, { callbackUrl: '/' }); }} className=" bg-red-400 p-3 rounded-lg text-white hover:bg-red-500 hover:scale-105">Sign in with {provider.name}</button>
               </div>
             ))

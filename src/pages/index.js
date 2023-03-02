@@ -5,8 +5,44 @@ import Head from 'next/head'
 import LoadingOverlay from '@murasoftware/react-loading-overlay'
 import { isLoading } from "atom/modalAtom"
 import { useRecoilState } from "recoil"
+import { useSession } from 'next-auth/react'
+import { useEffect, useState } from 'react'
+import { addDoc, collection, doc, limit, onSnapshot, orderBy, query, setDoc, where } from 'firebase/firestore'
+import { db } from '../../firebase'
 
 export default function Home() {
+  const { data: session } = useSession()
+  const [hasCheckedRegistration, setHasCheckedRegistration] = useState(false)
+  const [hasRegistered, setHasRegistered] = useState(false)
+
+  useEffect(() => {
+    if (session?.user.uid && !hasCheckedRegistration) {
+      const unsubscribe = onSnapshot(
+        query(collection(db, "members"), where('uid', '==', session?.user.uid)), (snapshot) => {
+          const member = snapshot.docs.map((doc) => doc.data());
+          console.log('MEMBER!!!', member)
+          setHasCheckedRegistration(true)
+          setHasRegistered(member?.length > 0 ? true : false)
+          // setLikes(snapshot.docs.map((doc) => ({...doc.data(), id: doc.id})))
+        }
+      )
+      return unsubscribe
+    }
+  }, [session, hasCheckedRegistration])
+
+  useEffect(() => {
+    if (session && session.user && hasCheckedRegistration && !hasRegistered) {
+      
+      async function addMember() {
+        const data =  await setDoc(doc(db, "members", session.user.uid), {
+          ...session.user,
+        })
+        console.log('[v]', data)
+      }
+      addMember()
+    }
+    
+  }, [session, hasCheckedRegistration, hasRegistered])
   const [_isLoading, setIsLoading] = useRecoilState(isLoading)
   return (
     <div className=" bg-gray-50 min-h-screen">

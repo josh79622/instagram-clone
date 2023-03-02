@@ -43,7 +43,7 @@ export default function Header() {
           <input type="text" className=" pl-10 border-gray-500 bg-gray-50 text-sm focus:ring-black focus:border-black rounded-md" placeholder='Search'/>
         </div>
         {/* Menu */}
-        <div className="flex space-x-4 items-center">
+        <div className="flex space-x-1 sm:space-x-2 md:space-x-3 lg:space-x-4 items-center">
           <HomeIcon onClick={() => router.push('/')} className="hidden md:inline-flex h-6 cursor-pointer hover:scale-105 transition-transform duration-200 ease-out"/>
           {
             session && session.user ? (
